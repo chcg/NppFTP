@@ -88,7 +88,14 @@ DEPENDENT_LIBS = {
 
 # --------------------------------------------------------------- HELPERS
 
-import os, sys, platform, shutil, urllib.request, hashlib, tarfile
+import os
+import sys
+import platform
+import shutil
+import urllib.request
+import hashlib
+import tarfile
+
 
 def join_path(*p):
     return os.path.abspath(os.path.join(*p))
