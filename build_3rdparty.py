@@ -16,11 +16,11 @@ DEPENDENT_LIBS = {
                 ]
             },
             'msvc': {
-                'result':   ['include/openssl/ssl.h', 'lib/libssl.lib', 'lib/libcrypto.lib'],
+                'result':   ['include/openssl/ssl.h', 'lib/libeay32.lib', 'lib/ssleay32.lib'],
                 'commands': [
-                    'perl Configure --openssldir=%(dest)s --prefix=%(dest)s no-shared no-asm VC-WIN32',
-                    'nmake',
-                    'nmake install_sw'
+                    'perl Configure --openssldir=%(dest)s no-asm VC-WIN32',
+                    'ms\\do_ms.bat',
+                    'nmake /f ms\\nt.mak install'
                 ]
             }
         }
@@ -88,11 +88,7 @@ DEPENDENT_LIBS = {
 
 # --------------------------------------------------------------- HELPERS
 
-import os
-import sys
-import platform
-import shutil
-
+import os, sys, platform, shutil
 
 def join_path(*p):
     return os.path.abspath(os.path.join(*p))
