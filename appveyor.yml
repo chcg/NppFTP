@@ -64,6 +64,6 @@ before_build:
     Write-Output "build_config: $build_config"
 build_script:
 - ps: |
-    cd c:\projects\npp_ftp\
+    cd c:\projects\nppftp\
     python build_3rdparty.py
     mingw32-make -f Makefile.mingw
