@@ -16,11 +16,11 @@ DEPENDENT_LIBS = {
                 ]
             },
             'msvc': {
-                'result':   ['include/openssl/ssl.h', 'lib/libeay32.lib', 'lib/ssleay32.lib'],
+                'result':   ['include/openssl/ssl.h', 'lib/libssl.lib', 'lib/libcrypto.lib'],
                 'commands': [
-                    'perl Configure --openssldir=%(dest)s no-asm VC-WIN32',
-                    'ms\\do_ms.bat',
-                    'nmake /f ms\\nt.mak install'
+                    'perl Configure --openssldir=%(dest)s --prefix=%(dest)s no-shared no-asm VC-WIN32',
+                    'nmake',
+                    'nmake install_sw'
                 ]
             }
         }
@@ -92,9 +92,6 @@ import os
 import sys
 import platform
 import shutil
-import urllib.request
-import hashlib
-import tarfile
 
 
 def join_path(*p):
@@ -124,45 +121,10 @@ def mkdir_p(*paths):
     if not os.path.exists(path):
         os.makedirs(path)
 
-def download_file(url, sha1, dir):
-    name = url.split('/')[-1]
-    loc  = join_path(dir, name)
-    if os.path.exists(loc):
-        hash = hashlib.sha1(open(loc, 'rb').read()).hexdigest()
-        if hash == sha1:
-            return loc
-        os.remove(loc)
-        message('Checksum mismatch for %s, re-downloading.\n' % name)
-    def hook(cnt, bs, total):
-        pct = int(cnt*bs*100/total)
-        message("\rDownloading: %s [%d%%]" % (name, pct))
-    urllib.request.urlretrieve(url, loc, reporthook=hook)
-    message("\r")
-    hash = hashlib.sha1(open(loc, 'rb').read()).hexdigest()
-    if hash != sha1:
-        os.remove(loc)
-        error('Checksum mismatch for %s, aborting.' % name)
-    message("\rDownloaded: %s [checksum OK]\n" % name)
-    return loc
-
-def download_tarball(url, sha1, dir, name):
-    loc = download_file(url, sha1, dir)
-    tar = tarfile.open(loc)
-    sub = tar.getnames()[0]
-    if '/' in sub:
-        sub = sub[:sub.index('/')]
-    src = join_path(dir, sub)
-    tgt = join_path(dir, name)
-    rmdir(src)
-    tar.extractall(dir)
-    rmdir(tgt)
-    os.rename(src, tgt)
-    return tgt
-
 # --------------------------------------------------------------- BUILDING
 
 def main():
-    build = os.path.abspath('obj')
+    build = os.path.abspath('3rdparty')
     dest  = os.path.abspath('3rdparty')
     mkdir_p(build)
     mkdir_p(dest, 'include')
@@ -182,8 +144,6 @@ def main():
             print('%s: skipping (already built)' % library)
             continue
         print('-' * 60, library)
-        download_tarball(DEPENDENT_LIBS[library]['url'],
-                         DEPENDENT_LIBS[library]['sha1'], build, library)
 
         if DEPENDENT_LIBS[library].get('shadow'):
             rmdir(join_path(build, library+'-build'))
@@ -201,7 +161,7 @@ def main():
         os.chdir(dest)
         for path in cfg['result']:
             if not os.path.exists(path):
-                error('Unable to build %s, missing: %s' % (library, path))
+                print('Unable to build %s, missing: %s' % (library, path))
 
 if __name__ == '__main__':
     main()

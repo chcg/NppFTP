@@ -1,0 +1,9 @@
+[submodule "3rdparty/zlib"]
+	path = 3rdparty/zlib
+	url = https://github.com/madler/zlib.git
+[submodule "3rdparty/openssl"]
+	path = 3rdparty/openssl
+	url = https://github.com/openssl/openssl.git
+[submodule "3rdparty/libssh"]
+	path = 3rdparty/libssh
+	url = https://git.libssh.org/projects/libssh.git
