@@ -22,7 +22,7 @@ DEPENDENT_LIBS = {
                     'ms\\do_ms.bat',
                     'nmake /f ms\\nt.mak install'
                 ]
-            }
+            },
             'msvc_x64': {
                 'result':   ['include/openssl/ssl.h', 'lib/libeay32.lib', 'lib/ssleay32.lib'],
                 'commands': [
@@ -56,7 +56,7 @@ DEPENDENT_LIBS = {
                     'copy /Y zconf.h  %(dest)s\\include >nul',
                     'copy /Y zlib.lib %(dest)s\\lib     >nul'
                 ]
-            }
+            },
             'msvc_x64': {
                 'result':   ['include/zlib.h', 'include/zconf.h', 'lib/zlib.lib'],
                 'replace':  [('win32/Makefile.msc', '-MD', '-MT')],
@@ -98,7 +98,7 @@ DEPENDENT_LIBS = {
                     'del %(dest)s\\lib\\ssh.lib >nul',
                     'move %(dest)s\\lib\\static\\ssh.lib %(dest)s\\lib >nul'
                 ]
-            }
+            },
             'msvc_x64': {
                 'result':   ['include/libssh/libssh.h', 'lib/ssh.lib'],
                 'commands': [
@@ -148,14 +148,19 @@ def mkdir_p(*paths):
 
 # --------------------------------------------------------------- BUILDING
 
-def main():
+def main(argv):
     build = os.path.abspath('3rdparty')
     dest  = os.path.abspath('3rdparty')
     mkdir_p(build)
     mkdir_p(dest, 'include')
     mkdir_p(dest, 'lib')
 
-    target = platform.system() == 'Windows' and 'msvc' or 'msvc_x64' or 'mingw-w64'
+    if(len(argv) == 1):
+        target = argv[0]
+        print('build for target: %s' % target)
+    else:
+        target = 'mingw-w64'
+        print('build for hardcoded target: %s' % target)
     for library in sorted(DEPENDENT_LIBS, key=lambda x: DEPENDENT_LIBS[x]['order']):
         if target not in DEPENDENT_LIBS[library]['target']:
             print('%s: skipping (not available)' % library)
@@ -189,4 +194,4 @@ def main():
                 print('Unable to build %s, missing: %s' % (library, path))
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])
