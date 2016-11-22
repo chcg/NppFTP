@@ -12,7 +12,7 @@ DEPENDENT_LIBS = {
                 'result':   ['include/openssl/ssl.h', 'lib/libssl.a', 'lib/libcrypto.a'],
                 'commands': [
                     'perl Configure --openssldir=%(dest)s --cross-compile-prefix=i686-w64-mingw32- no-shared no-asm mingw64',
-                    'make depend', 'make', 'make install_sw'
+                    'mingw32-make depend', 'mingw32-make', 'mingw32-make install_sw'
                 ]
             },
             'msvc': {
@@ -42,7 +42,7 @@ DEPENDENT_LIBS = {
             'mingw-w64': {
                 'result':   ['include/zlib.h', 'include/zconf.h', 'lib/libz.a'],
                 'commands': [
-                    'make -f win32/Makefile.gcc PREFIX=i686-w64-mingw32-',
+                    'mingw32-make -f win32/Makefile.gcc PREFIX=i686-w64-mingw32-',
                     'cp zlib.h zconf.h %(dest)s/include',
                     'cp libz.a %(dest)s/lib'
                 ]
@@ -83,8 +83,8 @@ DEPENDENT_LIBS = {
                         -DCMAKE_C_COMPILER=i686-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=i686-w64-mingw32-g++ \
                         -DOPENSSL_INCLUDE_DIRS=%(dest)s/include -DOPENSSL_CRYPTO_LIBRARY=%(dest)s/lib/libcrypto.a \
                         -DWITH_STATIC_LIB=ON -DCMAKE_INSTALL_PREFIX=%(dest)s -DCMAKE_PREFIX_PATH=%(dest)s %(src)s',
-                    'make',
-                    'make install'
+                    'mingw32-make',
+                    'mingw32-make install'
                 ]
             },
             'msvc': {
