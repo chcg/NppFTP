@@ -23,6 +23,14 @@ DEPENDENT_LIBS = {
                     'nmake /f ms\\nt.mak install'
                 ]
             }
+            'msvc_x64': {
+                'result':   ['include/openssl/ssl.h', 'lib/libeay32.lib', 'lib/ssleay32.lib'],
+                'commands': [
+                    'perl Configure --openssldir=%(dest)s no-asm VC-WIN64A',
+                    'ms\\do_ms.bat',
+                    'nmake /f ms\\nt.mak install'
+                ]
+            }
         }
     },
 
@@ -40,6 +48,16 @@ DEPENDENT_LIBS = {
                 ]
             },
             'msvc': {
+                'result':   ['include/zlib.h', 'include/zconf.h', 'lib/zlib.lib'],
+                'replace':  [('win32/Makefile.msc', '-MD', '-MT')],
+                'commands': [
+                    'nmake /f win32/Makefile.msc zlib.lib',
+                    'copy /Y zlib.h   %(dest)s\\include >nul',
+                    'copy /Y zconf.h  %(dest)s\\include >nul',
+                    'copy /Y zlib.lib %(dest)s\\lib     >nul'
+                ]
+            }
+            'msvc_x64': {
                 'result':   ['include/zlib.h', 'include/zconf.h', 'lib/zlib.lib'],
                 'replace':  [('win32/Makefile.msc', '-MD', '-MT')],
                 'commands': [
@@ -81,7 +99,18 @@ DEPENDENT_LIBS = {
                     'move %(dest)s\\lib\\static\\ssh.lib %(dest)s\\lib >nul'
                 ]
             }
-
+            'msvc_x64': {
+                'result':   ['include/libssh/libssh.h', 'lib/ssh.lib'],
+                'commands': [
+                    'cmake -G "NMake Makefiles" -DWITH_STATIC_LIB=ON -DCMAKE_BUILD_TYPE=Release \
+                        "-DCMAKE_C_FLAGS_RELEASE=/MT /O2 /Ob2 /D NDEBUG" "-DCMAKE_CXX_FLAGS_RELEASE=/MT /O2 /Ob2 /D NDEBUG" \
+                        -DOPENSSL_INCLUDE_DIRS=%(dest)s\\include -DOPENSSL_CRYPTO_LIBRARY=%(dest)s\\lib\\libeay32.lib \
+                        -DCMAKE_INSTALL_PREFIX=%(dest)s -DCMAKE_PREFIX_PATH=%(dest)s %(src)s',
+                    'nmake install',
+                    'del %(dest)s\\lib\\ssh.lib >nul',
+                    'move %(dest)s\\lib\\static\\ssh.lib %(dest)s\\lib >nul'
+                ]
+            }
         }
     }
 }
@@ -126,7 +155,7 @@ def main():
     mkdir_p(dest, 'include')
     mkdir_p(dest, 'lib')
 
-    target = platform.system() == 'Windows' and 'msvc' or 'mingw-w64'
+    target = platform.system() == 'Windows' and 'msvc' or 'msvc_x64' or 'mingw-w64'
     for library in sorted(DEPENDENT_LIBS, key=lambda x: DEPENDENT_LIBS[x]['order']):
         if target not in DEPENDENT_LIBS[library]['target']:
             print('%s: skipping (not available)' % library)

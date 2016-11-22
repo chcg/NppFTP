@@ -69,5 +69,5 @@ build_script:
     # Python 3
     $env:Path += "C:\Python34-x64"
     $env:Path += "C:\Python34-x64\Scripts"
-    python build_3rdparty.py
+    python build_3rdparty.py mingw-w64
     mingw32-make -f Makefile.mingw
