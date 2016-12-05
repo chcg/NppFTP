@@ -19,7 +19,36 @@ if (MINGW)
     set (win32_lib_dir ${CMAKE_SYSROOT}/${toolchain_prefix}/lib)
 endif (MINGW)
 
+# needed to build 3rdparty libs
+set(Python_ADDITIONAL_VERSIONS 3)
+find_package(PythonInterp 3)
+if( NOT PYTHONINTERP_FOUND )
+  message(FATAL_ERROR
+"Unable to find Python interpreter, required for builds and testing.
+
+Please install Python or specify the PYTHON_EXECUTABLE CMake variable.")
+endif()
+
+if( ${PYTHON_VERSION_STRING} VERSION_LESS 3 )
+  message(FATAL_ERROR "Python 3 or newer is required")
+endif()
+
+find_package(Perl)
+
 project (NppFTP)
+
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+set (output_dir "x64")
+set (3rdparty_prefix "msvc_x64")
+else()
+set (output_dir "x86")
+set (3rdparty_prefix "")
+endif()
+
+add_custom_target(
+    NppFTP3rdPartyPrerequists
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/build_3rdparty.py ${output_dir} ${3rdparty_prefix}
+    )
 
 if (MINGW)
     set (defs
@@ -76,25 +105,23 @@ set (project_sources
 )
 
 include_directories (${CMAKE_SOURCE_DIR}/)
-include_directories (src/)
-include_directories (src/Windows/)
-include_directories (tinyxml/include/)
-include_directories (UTCP/include/)
+include_directories (${CMAKE_SOURCE_DIR}/src/)
+include_directories (${CMAKE_SOURCE_DIR}/src/Windows/)
+include_directories (${CMAKE_SOURCE_DIR}/tinyxml/include/)
+include_directories (${CMAKE_SOURCE_DIR}/UTCP/include/)
 
 #3rdparty stuff
-set (output_dir "x86")
-if(EXISTS ${CMAKE_SOURCE_DIR}/x64)
-set (output_dir "x64")
-endif()
-include_directories (${output_dir}/3rdparty/include/)
-include_directories (${output_dir}/3rdparty/include/libssh/)
-include_directories (${output_dir}/3rdparty/include/openssl/)
+include_directories (${CMAKE_BINARY_DIR}/${output_dir}/3rdparty/include/)
+include_directories (${CMAKE_BINARY_DIR}/${output_dir}/3rdparty/include/libssh/)
+include_directories (${CMAKE_BINARY_DIR}/${output_dir}/3rdparty/include/openssl/)
 
-link_directories(${CMAKE_SOURCE_DIR}/${output_dir}/3rdparty/lib/)
+link_directories(${CMAKE_BINARY_DIR}/${output_dir}/3rdparty/lib/)
 
 add_definitions (${defs})
 
 add_library (NppFTP MODULE ${project_rc_files} ${project_sources})
+
+add_dependencies(NppFTP NppFTP3rdPartyPrerequists)
 
 if (MINGW)
 

@@ -65,14 +65,11 @@ before_build:
     Write-Output "build_config: $build_config"
 build_script:
     - cd "%APPVEYOR_BUILD_FOLDER%"
-    # Python 3 needed for urllib.request
-    - if "%platform%"=="X64"    C:\Python34-x64\python build_3rdparty.py x64 msvc_x64
-    - if "%platform%"=="Win32"  C:\Python34-x64\python build_3rdparty.py
     - mkdir _build
     - cd _build
 
     - ps: |
-        cmake -G "$generator" $build_type ..
+        cmake -G "$generator" -DPYTHON_EXECUTABLE:FILEPATH="C:\Python34-x64\python.exe" $build_type ..
         if ($LastExitCode -ne 0) {
             throw "Exec: $ErrorMessage"
         }
