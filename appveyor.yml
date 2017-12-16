@@ -1,10 +1,11 @@
 version: 0.27.3.{build}
-image: Visual Studio 2015
+image: Visual Studio 2017
 
 
 environment:
   matrix:
-    - PlatformToolset: v140_xp
+    - PlatformToolset: v141_xp
+    #- PlatformToolset: v140_xp
     #- PlatformToolset: v120_xp
 
 platform:
@@ -18,6 +19,7 @@ configuration:
 install:
     - if "%platform%"=="x64" set archi=amd64
     - if "%platform%"=="Win32" set archi=x86
+    - if "%PlatformToolset%"=="v141_xp" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" %archi%
     - if "%PlatformToolset%"=="v140_xp" call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %archi%
     - if "%PlatformToolset%"=="v120_xp" call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" %archi%
 
@@ -30,6 +32,7 @@ before_build:
     Write-Output "Platform: $env:PLATFORM"
     $generator = switch ($env:PLATFORMTOOLSET)
     {
+        "v141_xp" {"Visual Studio 15 2017"}
         "v140_xp" {"Visual Studio 14 2015"}
         "v120_xp" {"Visual Studio 12 2013"}
     }
@@ -41,7 +44,7 @@ before_build:
 build_script:
     - cd "%APPVEYOR_BUILD_FOLDER%"
     # Python 3 needed for python build_3rdparty.py
-    - set PATH=C:\Python34-x64;C:\Python34-x64\Scripts;%PATH%
+    - set PATH=C:\Python36-x64;C:\Python36-x64\Scripts;%PATH%
     - mkdir _build
     - cd _build
 

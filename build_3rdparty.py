@@ -5,8 +5,8 @@
 DEPENDENT_LIBS = {
     'openssl': {
         'order' : 1,
-        'url'   : 'https://www.openssl.org/source/openssl-1.0.2n.tar.gz',
-        'sha1'  : '0ca2957869206de193603eca6d89f532f61680b1',
+        'url'   : 'https://www.openssl.org/source/openssl-1.1.0g.tar.gz',
+        'sha1'  : 'e8240a8be304d4317a750753321b073c664bfdd4',
         'target': {
             'mingw-w64': {
                 'result':   ['include/openssl/ssl.h', 'lib/libssl.a', 'lib/libcrypto.a'],
@@ -16,19 +16,19 @@ DEPENDENT_LIBS = {
                 ]
             },
             'msvc': {
-                'result':   ['include/openssl/ssl.h', 'lib/libeay32.lib', 'lib/ssleay32.lib'],
+                'result':   ['include/openssl/ssl.h', 'lib/libssl.lib', 'lib/libcrypto.lib'],
                 'commands': [
-                    'perl Configure --openssldir=%(dest)s no-shared no-asm VC-WIN32',
-                    'ms\\do_ms.bat',
-                    'nmake /f ms\\nt.mak install'
+                    'perl Configure --prefix=%(dest)s --openssldir=%(dest)s no-shared no-asm VC-WIN32',
+                    'nmake',
+                    'nmake install_sw'
                 ]
             },
             'msvc_x64': {
-                'result':   ['include/openssl/ssl.h', 'lib/libeay32.lib', 'lib/ssleay32.lib'],
+                'result':   ['include/openssl/ssl.h', 'lib/libssl.lib', 'lib/libcrypto.lib'],
                 'commands': [
-                    'perl Configure --openssldir=%(dest)s no-shared no-asm VC-WIN64A',
-                    'ms\\do_win64a.bat',
-                    'nmake /f ms\\nt.mak install'
+                    'perl Configure --prefix=%(dest)s --openssldir=%(dest)s no-shared no-asm VC-WIN64A',
+                    'nmake',
+                    'nmake install_sw'
                 ]
             }
         }
