@@ -5,11 +5,12 @@ image: Visual Studio 2017
 environment:
   matrix:
     #- PlatformToolset: v142
-    - PlatformToolset: v141_xp
+    - PlatformToolset: v141
 
 platform:
-    - x64
-    - Win32
+    #- x64
+    #- Win32
+    - arm64
 
 configuration:
     - Release
@@ -22,8 +23,12 @@ install:
     - if "%platform%"=="Win32" set archi=x86
     - if "%platform%"=="Win32" set platform_input=Win32
 
+    - if "%platform%"=="arm64" set archi=amd64_arm64
+    - if "%platform%"=="arm64" set platform_input=ARM64
+
     - if "%PlatformToolset%"=="v142"    call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" %archi%
     - if "%PlatformToolset%"=="v141_xp" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" %archi%
+    - if "%PlatformToolset%"=="v141" call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" %archi%
 
 before_build:
 - ps: |
@@ -32,13 +37,10 @@ before_build:
     $generator = switch ($env:PLATFORMTOOLSET)
     {
         "v142"    {"Visual Studio 16 2019"}
+        "v141"    {"Visual Studio 15 2017"}
         "v141_xp" {"Visual Studio 15 2017"}
         "v140_xp" {"Visual Studio 14 2015"}
         "v120_xp" {"Visual Studio 12 2013"}
-    }
-    if ($env:PLATFORM_INPUT -eq "x64")
-    {
-        $generator = "$generator Win64"
     }
 
 build_script:
@@ -49,7 +51,7 @@ build_script:
     - cd _build
 
     - ps: |
-        cmake -G "$generator" -T "$env:PLATFORMTOOLSET" ..
+        cmake -G "$generator" -A "$env:PLATFORM_INPUT" -T "$env:PLATFORMTOOLSET" ..
         if ($LastExitCode -ne 0) {
             throw "Exec: $ErrorMessage"
         }
