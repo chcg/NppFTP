@@ -30,7 +30,6 @@ public:
 	virtual int				Create(HWND hParent, const TCHAR * title, const TCHAR * message);
 protected:
 	using Dialog::Create; //avoid compiler warning about hidden method
-	using Window::Create; //avoid compiler warning about hidden method
 
 	virtual INT_PTR			DlgMsgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual INT_PTR			OnInitDialog();	//DialogProc filters this one out, therefore calback
