@@ -29,10 +29,12 @@ public:
 							Dialog(int dialogResource = 0);
 	virtual					~Dialog();
 
-	virtual int				Create(HWND hParent, bool isModal, const TCHAR * title) override;	//if modal, returns 99 on close
+	virtual int				Create(HWND hParent, bool isModal, const TCHAR * title);	//if modal, returns 99 on close
 
 	static INT_PTR CALLBACK	DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 protected:
+	using Window::Create; //avoid compiler warning about hidden method
+
 	virtual INT_PTR			DlgMsgProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual INT_PTR			OnInitDialog();	//DialogProc filters this one out, therefore calback
 
