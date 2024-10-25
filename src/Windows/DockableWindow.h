@@ -65,6 +65,8 @@ protected:
 
 	tTbData					m_tbd;
 private:
+	using Window::Create; //avoid compiler warning about hidden method
+
 	static const int		_titleSize;
 	static const int		_infoSize;
 };
