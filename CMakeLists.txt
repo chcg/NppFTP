@@ -150,11 +150,11 @@ endif (MINGW)
 # build a CPack driven zip package
 #include (InstallRequiredSystemLibraries)
 
-set (CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
+set (CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/zip)
 install(TARGETS NppFTP 
-  DESTINATION zip)
+  DESTINATION .)
 
-INSTALL(DIRECTORY docs/ DESTINATION zip/doc)
+INSTALL(DIRECTORY docs/ DESTINATION ./doc)
 
 
 set(CPACK_PACKAGE_VERSION "0.30.18")
