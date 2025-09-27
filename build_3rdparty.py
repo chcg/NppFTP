@@ -5,8 +5,8 @@
 DEPENDENT_LIBS = {
     'openssl': {
         'order' : 1,
-        'url'   : 'https://github.com/openssl/openssl/releases/download/openssl-3.5.3/openssl-3.5.3.tar.gz',
-        'sha256'  : 'c9489d2abcf943cdc8329a57092331c598a402938054dc3a22218aea8a8ec3bf',
+        'url'   : 'https://github.com/openssl/openssl/releases/download/openssl-3.6.0/openssl-3.6.0.tar.gz',
+        'sha256'  : 'b6a5f44b7eb69e3fa35dbf15524405b44837a481d43d81daddde3ff21fcbb8e9',
         'target': {
             'mingw-w64': {
                 'result':   ['include/openssl/ssl.h', 'lib/libssl.a', 'lib/libcrypto.a'],
