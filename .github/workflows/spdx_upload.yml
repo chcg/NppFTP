@@ -1,23 +1,23 @@
 
 name: SBOM upload
 
-on: 
+on:
   workflow_dispatch:
-  push: 
+  push:
     branches: ["master"]
 
 jobs:
   SBOM-upload:
 
     runs-on: ubuntu-latest
-    permissions: 
+    permissions:
       id-token: write
       contents: write
-      
+
     steps:
     - uses: actions/checkout@v7
     # - name: Generate SBOM
-      # run: | 
+      # run: |
         # curl -Lo $RUNNER_TEMP/sbom-tool https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-linux-x64
         # chmod +x $RUNNER_TEMP/sbom-tool
         # $RUNNER_TEMP/sbom-tool generate -b . -bc . -pn ${{ github.repository }} -pv 1.0.0 -ps OwnerName -nsb https://sbom.mycompany.com -V Verbose
@@ -25,7 +25,7 @@ jobs:
       with:
         name: sbom
         path: ./project.spdx.json
-    - name: SBOM upload 
+    - name: SBOM upload
       uses: advanced-security/spdx-dependency-submission-action@v0.3.2
       with:
         filePath: "./"

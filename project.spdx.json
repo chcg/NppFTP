@@ -9,22 +9,22 @@
     "created": "2025-10-22T09:13:54Z",
     "licenseListVersion": "3.26"
   },
-  "name": "nppftp-v0.30.22",
+  "name": "nppftp-v0.30.23",
   "dataLicense": "CC0-1.0",
-  "documentNamespace": "http://spdx.org/spdxdocs/nppftp-v0.30.22-dfbe4781-4406-4acd-9437-ffb16bbcc3ac",
+  "documentNamespace": "http://spdx.org/spdxdocs/nppftp-v0.30.23-dfbe4781-4406-4acd-9437-ffb16bbcc3ac",
   "packages": [
     {
       "SPDXID": "SPDXRef-Package-nppftp",
       "name": "nppftp",
-      "versionInfo": "v0.30.22",
-      "packageVersion": "v0.30.22",
+      "versionInfo": "v0.30.23",
+      "packageVersion": "v0.30.23",
       "primaryPackagePurpose": "LIBRARY",
-      "downloadLocation": "https://github.com/ashkulz/NppFTP/releases/tag/v0.30.22",
+      "downloadLocation": "https://github.com/ashkulz/NppFTP/releases/tag/v0.30.23",
       "filesAnalyzed": false,
       "homepage": "https://ashkulz.github.io/NppFTP/",
       "licenseConcluded": "NOASSERTION",
       "licenseDeclared": "NOASSERTION",
-      "copyrightText": "Copyright 2010-2025.",
+      "copyrightText": "Copyright 2010-2026.",
       "summary": "Plugin for Notepad++ allowing FTP, FTPS, FTPES and SFTP communications",
       "supplier" : "Person: Ashish Kulkarni"
     },
